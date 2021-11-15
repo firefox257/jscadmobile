@@ -1,0 +1,33 @@
+{
+  "name": "@jscad/examples",
+  "version": "2.3.1",
+  "description": "Example Files for JSCAD",
+  "repository": "https://github.com/jscad/OpenJSCAD.org",
+  "scripts": {},
+  "contributors": [
+    {
+      "name": "Rene K. Mueller",
+      "url": "http://renekmueller.com"
+    },
+    {
+      "name": "z3dev",
+      "url": "http://www.z3d.jp"
+    },
+    {
+      "name": "Mark 'kaosat-dev' Moissette",
+      "url": "http://kaosat.net"
+    }
+  ],
+  "keywords": [
+    "openjscad",
+    "jscad",
+    "examples",
+    "tutorials"
+  ],
+  "license": "MIT",
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/openjscad",
+    "logo": "https://opencollective.com/openjscad/logo.txt"
+  }
+}
