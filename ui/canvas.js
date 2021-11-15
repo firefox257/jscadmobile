@@ -1,4 +1,10 @@
 
+
+
+/*
+background: url(./images/background.jpg) no-repeat center center;
+backgrokund-size: cover;
+*/
 var css =`
 html
 {
@@ -24,6 +30,7 @@ body
         padding: 0;
         display:inline-block;
         z-index:0;
+
 }
 
 .innerCanvas
@@ -35,6 +42,12 @@ body
         width:100vw;
         height:100vh;
         display:inline-block;
+
+}
+
+.innerCanvas > *
+{
+	pointer-events:auto;
 }
 @media (orientation: landscape) {
   .innerCanvas
@@ -64,6 +77,8 @@ body
 	display:inline-block;
 	color: #fff;
 	z-index:1;
+	pointer-events: none;
+
 }
 
 .dot1Canvas
@@ -93,21 +108,21 @@ body
 
 `;
 var html=`
-<div td="dom">
-	<!--<canvas class="backgroundCanvas">
 
-	</canvas>-->
-	<div class="fullCanvas">
-		<div class="innerCanvas" ti>
-			<!--
-			<span class="dot1Canvas">
-			</span>
-			<span class="dot2Canvas">
-			</span>
-			-->
-		</div>
+<canvas class="backgroundCanvas" td="canvas" te="onclick:onclick">
+
+</canvas>
+<div class="fullCanvas">
+	<div class="innerCanvas" ti>
+		<!--
+		<span class="dot1Canvas">
+		</span>
+		<span class="dot2Canvas">
+		</span>
+		-->
 	</div>
 </div>
+
 `;
 
 
@@ -138,27 +153,16 @@ var html=`
 		//if(window.matchMedia("(orientation: portrait)").matches)
 		if(window.orientation == 0 || window.orientation == undefined)
 		{
-			//console.log("landscape");
 			w=(window.innerWidth);
 			h=(window.innerHeight);
 		}
 		else
 		{
-			//console.log("portrate");
 			w=(window.innerHeight);
 			h=(window.innerWidth);
 
 		}
-		/*if(or)
-		{
-			w=(window.innerWidth);
-			h=(window.innerHeight);
-		}
-		else
-		{
-			h=(window.innerWidth);
-			w=(window.innerHeight);
-		}*/
+
 		return {w: w, h: h};
 	}
 
@@ -177,7 +181,7 @@ function o()
 		var b=document.body;
 
 		b.style.zoom="100%";
-		
+
 		var f= document.querySelector(".backgroundCanvas");
 		var size = windowSize();
 
@@ -202,27 +206,30 @@ function o()
 		{
 
 		},
-		dom: undefined,
+		canvas:undefined,
 		scene: undefined,
 		camera: undefined,
 		render: undefined,
+		onclick(e)
+		{
+			console.log("here1");
+		},
 		init()
 		{
 			var body  = $.q("body");
 			body.onresize = reSize;
 			at.scene = new THREE.Scene();
 			var size = windowSize();
-			at.camera = new THREE.PerspectiveCamera( 75, size.w / size.h, 0.1, 100000);
-			at.renderer = new THREE.WebGLRenderer({antialias:true});
+			at.camera = new THREE.PerspectiveCamera( 45, size.w / size.h, 0.1, 100000);
+			at.renderer = new THREE.WebGLRenderer(
+				{
+					antialias:true,
+					canvas:at.canvas
+				});
 			at.renderer.setSize( size.w, size.h );
 
 			at.renderer.setClearColor( 0xffffff, 0);
 
-
-
-			var ren = at.renderer.domElement;
-			$.attr(ren, "class", "backgroundCanvas");
-			at.dom.appendChild(ren);
 			reSize();
 			window.onscroll=reScroll;
 			window.onorientationchange=reSize;

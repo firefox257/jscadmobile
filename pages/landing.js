@@ -8,16 +8,22 @@ body
 
 var html = `
 <c tt ="canvas">
+<span te="onclick:onclick">
 	here1
+	</span>
 </c>
 `;
 
 
 function o()
 {
+
 	var at =
 	{
-
+		onclick(e)
+		{
+			alert("herereer");
+		},
 	};
 	return at;
 }
