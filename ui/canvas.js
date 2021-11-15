@@ -134,9 +134,22 @@ var html=`
 	function windowSize()
 	{
 		var w, h;
-		var or=window.innerWidth > window.innerHeight;
+		//console.log("here1: " + window.orientation);
+		//if(window.matchMedia("(orientation: portrait)").matches)
+		if(window.orientation == 0 || window.orientation == undefined)
+		{
+			//console.log("landscape");
+			w=(window.innerWidth);
+			h=(window.innerHeight);
+		}
+		else
+		{
+			//console.log("portrate");
+			w=(window.innerHeight);
+			h=(window.innerWidth);
 
-		if(or)
+		}
+		/*if(or)
 		{
 			w=(window.innerWidth);
 			h=(window.innerHeight);
@@ -145,7 +158,7 @@ var html=`
 		{
 			h=(window.innerWidth);
 			w=(window.innerHeight);
-		}
+		}*/
 		return {w: w, h: h};
 	}
 
@@ -159,16 +172,14 @@ function o()
 {
 	function reSize()
 	{
+
 		reScroll();
 		var b=document.body;
 
 		b.style.zoom="100%";
-
-
+		
 		var f= document.querySelector(".backgroundCanvas");
 		var size = windowSize();
-
-
 
 		f.style.width=size.w + "px";
 		f.style.height=size.h + "px";
@@ -180,6 +191,8 @@ function o()
 
     at.renderer.setSize( size.w, size.h );
 
+		at.renderer.render( at.scene, at.camera );
+
 	}
 
 	var at=
@@ -187,10 +200,7 @@ function o()
 
 		attr:
 		{
-			get background()
-			{
-				return "";
-			}
+
 		},
 		dom: undefined,
 		scene: undefined,
@@ -198,9 +208,11 @@ function o()
 		render: undefined,
 		init()
 		{
+			var body  = $.q("body");
+			body.onresize = reSize;
 			at.scene = new THREE.Scene();
 			var size = windowSize();
-			at.camera = new THREE.PerspectiveCamera( 75, size.w / size.h, 0.1, 1000);
+			at.camera = new THREE.PerspectiveCamera( 75, size.w / size.h, 0.1, 100000);
 			at.renderer = new THREE.WebGLRenderer({antialias:true});
 			at.renderer.setSize( size.w, size.h );
 
@@ -215,14 +227,14 @@ function o()
 			window.onscroll=reScroll;
 			window.onorientationchange=reSize;
 
-			/*var geometry = new THREE.BoxGeometry( 1, 1, 1);
+			var geometry = new THREE.BoxGeometry( 1, 1, 1);
 var material = new THREE.MeshBasicMaterial( { color: 0xff0051 });
 var cube = new THREE.Mesh ( geometry, material );
 at.scene.add( cube );
 
 at.camera.position.z = 5;
 
-at.renderer.render( at.scene, at.camera );*/
+at.renderer.render( at.scene, at.camera );
 
 
 
