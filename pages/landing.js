@@ -1,29 +1,26 @@
 
+console.log("landing init");
 var css = `
 body
 {
-	color: #fff;
+	color: #000;
 }
 `;
 
 var html = `
 <c tt ="canvas">
-<span te="onclick:onclick">
-	here1
-	</span>
+	<c tt="menu" >d</c>
+</c>
+<c tt = "modals">
 </c>
 `;
-
 
 function o()
 {
 
 	var at =
 	{
-		onclick(e)
-		{
-			alert("herereer");
-		},
+
 	};
 	return at;
 }

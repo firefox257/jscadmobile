@@ -14,7 +14,9 @@ var _mimetype = {
 	".bin": "application/octet-stream",
 	".css": "text/css",
 	".hdr": "application/octet-stream",
-	".json": "application/json"
+	".json": "application/json",
+	".stl": "application/sla",
+	".dxf": "application/dxf"
 	
 };
 
