@@ -104,21 +104,35 @@ body
         border:1px solid #f00;
 }
 
+.navView
+{
+	position:absolute;
+	top: 0;
+	left: 50%;
+	transform: translate(-50%, 0);
+	z-index:10;
 
+}
 `;
 var html=`
-
-<canvas class="backgroundCanvas" td="canvas" te="onclick:onclick">
+<canvas class="backgroundCanvas" td="canvas"
+te="onclick:onclick,onmousedown:onmousedown,onmouseup:onmouseup,onmousemove:onmousemove,onmousewheel:onmousewheel,ontouchstart:ontouchstart,ontouchend:ontouchend,ontouchmove:ontouchmove">
 
 </canvas>
 <div class="fullCanvas">
 	<div class="innerCanvas" ti>
-		<!--
-		<span class="dot1Canvas">
-		</span>
-		<span class="dot2Canvas">
-		</span>
-		-->
+	<span class = "navView">
+		<c tt = "radiobutton" group="nav" id="xy" value="xy" te="onselect:onselect">
+			X/Y
+		</c>
+		<c tt = "radiobutton" group="nav" id="zoom" value="zoom" te="onselect:onselect">
+			Zoom
+		</c>
+		<c tt = "radiobutton" group="nav" id="rotxy" value="rotxy" te="onselect:onselect">
+			Rot X/Y
+		</c>
+	</span>
+
 	</div>
 </div>
 
@@ -284,54 +298,61 @@ function o()
 		at.renderer.setSize( size.w, size.h );
 
 		at.scene = new THREE.Scene();
+		at.scene1 = new THREE.Scene();
+		at.scene2 = new THREE.Scene();
+
+
+		at.scene2.position.z = -140;
 		at.scene.background = new THREE.Color( 0xeeeeee );
-		at.camera.position.y = -1;
-		at.camera.position.z = 140;
+		//at.camera.position.y = -1;
+		//at.camera.position.z = 140;
 
 
 	}
 
 
 
-	const lightcolor1 = 0xFFFFFF;
+	const lightcolor1 = 0xdddddd;
 	const lightintensity1 = 1;
 	const light1 = new THREE.DirectionalLight(lightcolor1, lightintensity1);
 	light1.position.set(-1000, 2000, 4000);
 
-	const lightcolor2 = 0xFFAA00;
+	const lightcolor2 = 0xddaa800;
 	const lightintensity2 = 0.5;
 	const light2 = new THREE.DirectionalLight(lightcolor2, lightintensity2);
 	light2.position.set(0, -500, -4000);
+
+
+	const ambilight = new THREE.AmbientLight( 0x404040 ); // soft white light
+	//scene.add( light );
 	function setupMsgc()
 	{
 		$.msgc.subscribe("set cad obj", function(cad)
 		{
+			var tt = $.obj2str(cad);
+			console.log(tt);
+			console.log("cad");
+			console.log(cad);
+
 			at.mainobj = cad;
 			at.scene.clear();
-			at.scene.add(light1);
-			at.scene.add(light2);
+			at.scene1.clear();
+			at.scene2.clear();
+
+			at.scene2.add(light1);
+			at.scene2.add(light2);
+			at.scene2.add(ambilight);
+
 			var obj1 = cadToThree(cad);
 
 			obj1.rotation.x = 0.5;
 			obj1.rotation.y = 0.5;
 
 			at.scene.add(obj1);
+			at.scene1.add(at.scene);
+			at.scene2.add(at.scene1);
 
-			//var v2 = v1.toStlBinary();
-
-			//console.log("here1");
-			//console.log(URL.createObjectURL);
-			//var blobUrl = URL.createObjectURL(v2);
-
-			//var link = document.createElement("a"); // Or maybe get it from the current document
-			//link.href = blobUrl;
-			//link.download = "try1.stl";
-			//link.innerHTML = "Click here to download the file";
-			//document.body.appendChild(link); // Or append it whereever you want
-
-
-			//console.log(v2);
-				at.renderer.render( at.scene, at.camera );
+			at.renderer.render( at.scene2, at.camera );
 		});
 	}
 
@@ -345,27 +366,157 @@ function o()
 		mainobj: undefined,
 		canvas:undefined,
 		scene: undefined,
+		scene1: undefined,
+		scene2: undefined,
 		camera: undefined,
 		render: undefined,
 		modal: undefined,
 		link: undefined,
+		startmouse: false,
+		startX: 0,
+		startY: 0,
+		startX1: 0,
+		startY1: 0,
+		viewfunc: "",
+		lastcameraX: 0,
+		lastcameraY: 0,
+		lastcameraZ: 0,
+		lastcameraRotX: 0,
+		lastcameraRotY: 0,
+		lastcameraRotZ: 0,
+		lastsceneX: 0,
+		lastsceneY: 0,
+		lastsceneZ: 0,
+		lastsceneRotX: 0,
+		lastsceneRotY: 0,
+		lastsceneRotZ: 0,
+
+		lastscene1X: 0,
+		lastscene1Y: 0,
+		lastscene1Z: 0,
+		lastscene1RotX: 0,
+		lastscene1RotY: 0,
+		lastscene1RotZ: 0,
+
+		lastscene2X: 0,
+		lastscene2Y: 0,
+		lastscene2Z: 0,
+		lastscene2RotX: 0,
+		lastscene2RotY: 0,
+		lastscene2RotZ: 0,
+
 		onclick(e)
 		{
-			console.log("here1");
+			//console.log("here1");
+		},
+		startinit(x, y)
+		{
+			at.startmouse = true;
+			at.startX = x;
+			at.startY = y;
+			at.lastcameraX = at.camera.position.x;
+			at.lastcameraY = at.camera.position.y;
+			at.lastcameraZ = at.camera.position.z;
+			at.lastcameraRotX = at.camera.rotation.x;
+			at.lastcameraRotY = at.camera.rotation.y;
+			at.lastcameraRotZ = at.camera.rotation.z;
+			//console.log(at.scene);
+			at.lastsceneX = at.scene.position.x;
+			at.lastsceneY = at.scene.position.y;
+			at.lastsceneZ = at.scene.position.z;
+			at.lastsceneRotX = at.scene.rotation.x;
+			at.lastsceneRotY = at.scene.rotation.y;
+			at.lastsceneRotZ = at.scene.rotation.z;
+
+			at.lastscene1X = at.scene1.position.x;
+			at.lastscene1Y = at.scene1.position.y;
+			at.lastscene1Z = at.scene1.position.z;
+			at.lastscene1RotX = at.scene1.rotation.x;
+			at.lastscene1RotY = at.scene1.rotation.y;
+			at.lastscene1RotZ = at.scene1.rotation.z;
+
+			at.lastscene2X = at.scene2.position.x;
+			at.lastscene2Y = at.scene2.position.y;
+			at.lastscene2Z = at.scene2.position.z;
+			at.lastscene2RotX = at.scene2.rotation.x;
+			at.lastscene2RotY = at.scene2.rotation.y;
+			at.lastscene2RotZ = at.scene2.rotation.z;
+		},
+		onmousedown(e)
+		{
+			at.startinit(e.clientX, e.clientY);
+		},
+		onmouseup(e)
+		{
+
+			at.startmouse = false;
+		},
+		move(x, y)
+		{
+
+			if(at.startmouse)
+			{
+				if(at.viewfunc == "zoom")
+				{
+
+					var yy = at.startY - y;
+				 	//at.camera.position.z = 	at.lastcameraZ + yy;
+
+					at.scene1.position.z = at.lastscene1Z + yy;
+					at.renderer.render( at.scene2, at.camera );
+				}
+				else if(at.viewfunc == "xy")
+				{
+					var xx = at.startX - x;
+					var yy = at.startY - y;
+					at.scene1.position.x = at.lastscene1X - (xx/5);
+					at.scene1.position.y = at.lastscene1Y + (yy/5);
+					at.renderer.render( at.scene2, at.camera );
+				}
+				else if(at.viewfunc == "rotxy")
+				{
+					var xx = at.startX - x;
+					var yy = at.startY - y;
+					at.scene2.rotation.x = at.lastscene2RotX + (yy/50);
+					at.scene2.rotation.y = at.lastscene2RotY + (xx/50);
+					at.renderer.render( at.scene2, at.camera );
+				}
+			}
+		},
+		onmousemove(e)
+		{
+			at.move(e.clientX, e.clientY);
+
+		},
+		onmousewheel(e)
+		{
+
+		},
+		ontouchstart(e)
+		{
+			var ii = e.touches[0];
+			at.startinit(ii.clientX, ii.clientY);
+		},
+		ontouchend(e)
+		{
+			at.startmouse = false;
+		},
+		ontouchmove(e)
+		{
+			var ii = e.touches[0];
+			at.move(ii.clientX, ii.clientY);
+		},
+		onselect(func)
+		{
+			at.viewfunc = func;
 		},
 		createDownload(e)
 		{
 			at.modal.show = 1;
-			console.log(at.link);
 			var stl = at.mainobj.toStlBinary();
 			var blobUrl = URL.createObjectURL(stl);
-
-
-			//at.link.href = blobUrl;
 			$.attr(at.link, "href", blobUrl);
 			at.link.download = "obj.stl";
-			//link.innerHTML = "Click here to download the file";
-
 		},
 		init()
 		{
@@ -373,9 +524,6 @@ function o()
 			body.onresize = reSize;
 
 			var size = windowSize();
-
-
-
 			setupThree(size);
 
 			reSize();
@@ -383,57 +531,7 @@ function o()
 			window.onorientationchange=reSize;
 
 
-
-			//const material = new THREE.MeshPhongMaterial({color: 0x00ffff});
-
 			setupMsgc();
-
-
-
-
-
-
-		//console.log("v1");
-		//console.log(v1);
-
-		//var s = v1.toStlBinary();
-
-
-
-
-
-
-/*
-		var obj1 = cadToThree(v1);
-
-		obj1.rotation.x = 0.5;
-		obj1.rotation.y = 0.5;
-
-		console.log("obj1");
-		console.log(obj1);
-		at.scene.add(obj1);
-		console.log("CSG");
-
-		var v2 = v1.toStlBinary();
-
-		console.log("here1");
-		console.log(URL.createObjectURL);
-		var blobUrl = URL.createObjectURL(v2);
-
-		var link = document.createElement("a"); // Or maybe get it from the current document
-		link.href = blobUrl;
-		link.download = "try1.stl";
-		link.innerHTML = "Click here to download the file";
-		document.body.appendChild(link); // Or append it whereever you want
-
-
-		console.log(v2);
-
-
-			at.renderer.render( at.scene, at.camera );
-			*/
-
-
 
 		}//end init
 	};
