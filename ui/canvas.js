@@ -189,6 +189,9 @@ te="onclick:onclick,onmousedown:onmousedown,onmouseup:onmouseup,onmousemove:onmo
 
 	function cadToThree(v1)
 	{
+
+		console.log("here123");
+		console.log(v1);
 		const gg = new THREE.BufferGeometry();
 		var pos = [];
 		var nor = [];
@@ -208,37 +211,81 @@ te="onclick:onclick,onmousedown:onmousedown,onmouseup:onmouseup,onmousemove:onmo
 				co = [co[0], co[1], co[2], 1.0];
 			}
 
-			for(var ii =2; ii < vv.length; ii++)
-			{
-				pos.push(vv[0].pos.x);
-				pos.push(vv[0].pos.y);
-				pos.push(vv[0].pos.z);
 
-				pos.push(vv[ii-1].pos.x);
-				pos.push(vv[ii-1].pos.y);
-				pos.push(vv[ii-1].pos.z);
-
-				pos.push(vv[ii].pos.x);
-				pos.push(vv[ii].pos.y);
-				pos.push(vv[ii].pos.z);
-
-				for(var iii = 0; iii < 3; iii++)
+				for(var ii =2; ii < vv.length; ii++)
 				{
-					nor.push(nn.x);
-					nor.push(nn.y);
-					nor.push(nn.x);
-					col.push(co[0]);
-					col.push(co[1]);
-					col.push(co[2]);
-					col.push(co[3]);
+
+					var x0 = vv[0].pos.x;
+					var y0 = vv[0].pos.y;
+					var z0 = vv[0].pos.z;
+
+					var x1 = vv[ii-1].pos.x;
+					var y1 = vv[ii-1].pos.y;
+					var z1 = vv[ii-1].pos.z;
+
+					var x2 = vv[ii].pos.x;
+					var y2 = vv[ii].pos.y;
+					var z2 = vv[ii].pos.z;
+
+
+					pos.push(x0);
+					pos.push(y0);
+					pos.push(z0);
+
+					pos.push(x1);
+					pos.push(y1);
+					pos.push(z1);
+
+					pos.push(x2);
+					pos.push(y2);
+					pos.push(z2);
+
+					var nx1 = x1 - x0;
+					var ny1 = y1 - y0;
+					var nz1 = z1 - z0;
+
+					var nx2 = x2 - x0;
+					var ny2 = y2 - y0;
+					var nz2 = z2 - z0;
+
+					var nnx = ny1 * nz2 - nz1 * ny2;
+					var nny = nz1 * nx2 - nx1 * nz2;
+					var nnz = nx1 * ny2 - ny1 * nx2;
+
+
+					var nnl = Math.sqrt(nnx * nnx + nny * nny + nnz * nnz);
+					nnx = nnx / nnl;
+					nny = nny / nnl;
+					nnz = nnz / nnl;
+
+
+
+					for(var iii = 0; iii < 3; iii++)
+					{
+						/*
+						nor.push(nn.x);
+						nor.push(nn.y);
+						nor.push(nn.x);
+						//*/
+
+
+						nor.push(nnx);
+						nor.push(nny);
+						nor.push(nnz);
+						//*/
+
+						col.push(co[0]);
+						col.push(co[1]);
+						col.push(co[2]);
+						col.push(co[3]);
+
+					}
+
 
 				}
 
 
 			}
-
-
-		}
 
 		gg.setAttribute( 'position', new THREE.BufferAttribute( new Float32Array(pos), 3 ) );
 		gg.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(nor), 3));
@@ -304,6 +351,8 @@ function o()
 
 		at.scene2.position.z = -140;
 		at.scene.background = new THREE.Color( 0xeeeeee );
+		at.scene1.background = new THREE.Color( 0xeeeeee );
+		at.scene2.background = new THREE.Color( 0xeeeeee );
 		//at.camera.position.y = -1;
 		//at.camera.position.z = 140;
 
@@ -313,14 +362,19 @@ function o()
 
 
 	const lightcolor1 = 0xdddddd;
-	const lightintensity1 = 1;
+	const lightintensity1 = 0.55;
 	const light1 = new THREE.DirectionalLight(lightcolor1, lightintensity1);
 	light1.position.set(-1000, 2000, 4000);
 
-	const lightcolor2 = 0xddaa800;
-	const lightintensity2 = 0.5;
+	const lightcolor2 = 0xddaa88;
+	const lightintensity2 = 0.3;
 	const light2 = new THREE.DirectionalLight(lightcolor2, lightintensity2);
-	light2.position.set(0, -500, -4000);
+	light2.position.set(0, -500, 4000);
+
+	const lightcolor3 = 0xcc9977;
+	const lightintensity3 = 0.2;
+	const light3 = new THREE.DirectionalLight(lightcolor3, lightintensity3);
+	light3.position.set(1000, 0, -1000);
 
 
 	const ambilight = new THREE.AmbientLight( 0x404040 ); // soft white light
@@ -329,11 +383,8 @@ function o()
 	{
 		$.msgc.subscribe("set cad obj", function(cad)
 		{
-			var tt = $.obj2str(cad);
-			console.log(tt);
-			console.log("cad");
-			console.log(cad);
-
+			//console.log("cad");
+			//console.log(cad);
 			at.mainobj = cad;
 			at.scene.clear();
 			at.scene1.clear();
@@ -341,6 +392,7 @@ function o()
 
 			at.scene2.add(light1);
 			at.scene2.add(light2);
+			at.scene2.add(light3);
 			at.scene2.add(ambilight);
 
 			var obj1 = cadToThree(cad);
@@ -349,6 +401,20 @@ function o()
 			obj1.rotation.y = 0.5;
 
 			at.scene.add(obj1);
+
+/*
+			const geometry = new THREE.BoxGeometry( 20, 20, 20 );
+			const material = new THREE.MeshPhongMaterial( {
+color: 0xdaa520,
+specular: 0xbcbcbc,
+ } );
+			const cube = new THREE.Mesh( geometry, material );
+			cube.rotation.x = 0.5;
+    	cube.rotation.y = 0.5;
+
+			at.scene.add( cube );
+			//*/
+
 			at.scene1.add(at.scene);
 			at.scene2.add(at.scene1);
 
@@ -469,16 +535,16 @@ function o()
 				{
 					var xx = at.startX - x;
 					var yy = at.startY - y;
-					at.scene1.position.x = at.lastscene1X - (xx/5);
-					at.scene1.position.y = at.lastscene1Y + (yy/5);
+					at.scene.position.x = at.lastsceneX - (xx/5);
+					at.scene.position.y = at.lastsceneY + (yy/5);
 					at.renderer.render( at.scene2, at.camera );
 				}
 				else if(at.viewfunc == "rotxy")
 				{
 					var xx = at.startX - x;
 					var yy = at.startY - y;
-					at.scene2.rotation.x = at.lastscene2RotX + (yy/50);
-					at.scene2.rotation.y = at.lastscene2RotY + (xx/50);
+					at.scene1.rotation.x = at.lastscene1RotX + (yy/50);
+					at.scene1.rotation.y = at.lastscene1RotY + (xx/50);
 					at.renderer.render( at.scene2, at.camera );
 				}
 			}

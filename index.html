@@ -81,7 +81,7 @@ scroll="no">
 
 		function rotcy(rot, r, h) {
 			return rotate(90, rot,
-				color([1.0, 0, 0], cylinder({r: r, h: h, center: true, fn: 50}) )      );
+				color([1.0, 0, 0], cylinder({r: r, h: h, center: true, fn: 90}) )      );
 		}
 
 		function example001() {
@@ -91,7 +91,7 @@ scroll="no">
 			var cy_h = r_from_dia(size * 2.5);
 
 			return difference(
-				color([1.0, 1.0, 1.0],	sphere({r: r_from_dia(size), fn:50})),
+				color([0.1, 1.0, 1.0],	sphere({r: r_from_dia(size), fn:90})),
 				rotcy([0, 0, 0], cy_r, cy_h),
 				rotcy([1, 0, 0], cy_r, cy_h),
 				rotcy([0, 1, 0], cy_r, cy_h)
@@ -100,10 +100,22 @@ scroll="no">
 
 
 
-			//var v1 = color([1.0,1.0,1.0, 1.0], example001());
-			var v1 = example001();
+			var v1 = color([1.0,1.0,1.0, 1.0], example001());
+			//var v1 = example001();
+
+			/*
+			var v1 = cube({size:[30, 30, 30], center: true});
+			var ss = $.obj2str(v1.polygons);
+			//console.log(ss);
+			var v2 = new CSG();
+			v2.polygons = $.str2obj(ss);
+			console.log("Here1");
+			console.log(v1);
+			console.log(v2);
+			*/
+
 			$.msgc.send("set cad obj", v1);
-			$.msgc.send("set cad obj", v1);
+
 
 	</script>
 </body>
