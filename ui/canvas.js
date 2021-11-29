@@ -550,25 +550,11 @@ specular: 0xbcbcbc,
 				if(at.viewfunc == "zoom")
 				{
 
-					var yy = at.startY - y;
-				 	//at.camera.position.z = 	at.lastcameraZ + yy;
-
-					at.scene1.position.z = at.lastscene1Z + yy;
-					at.renderer.render( at.scene2, at.camera );
-				}
-				else if(at.viewfunc == "xy")
-				{
-					var xx = at.startX - x;
-					var yy = at.startY - y;
-
-					//recalculate based on scene1 rotation.
-
-
 					var objx = {x:1, y:0, z:0};
 					var objy = {x:0, y:1, z:0};
 					var objz = {x:0, y:0, z:1};
-					console.log("at.scene1.rotation");
-					console.log(at.scene1.rotation);
+					//console.log("at.scene1.rotation");
+					//console.log(at.scene1.rotation);
 
 					var cosx = Math.cos(at.scene1.rotation.x);
 					var sinx = Math.sin(at.scene1.rotation.x);
@@ -592,21 +578,58 @@ specular: 0xbcbcbc,
 					rotz(cosz, sinz, objz);
 
 
+					var yy = at.startY - y;
+					//at.scene.position.z = at.lastsceneZ + yy;
 
-					//*/
+
+					at.scene.position.x = at.lastsceneX - objz.x * yy;
+					at.scene.position.y = at.lastsceneY - objz.y * yy;
+					at.scene.position.z = at.lastsceneZ + objz.z * yy;
 
 
 
-					/*
-					at.scene.position.x = at.lastsceneX - (xx/5);
-					at.scene.position.y = at.lastsceneY + (yy/5);
 
-					//*/
+					at.renderer.render( at.scene2, at.camera );
+				}
+				else if(at.viewfunc == "xy")
+				{
+					var xx = at.startX - x;
+					var yy = at.startY - y;
 
+					//recalculate based on scene1 rotation.
+
+
+					var objx = {x:1, y:0, z:0};
+					var objy = {x:0, y:1, z:0};
+					var objz = {x:0, y:0, z:1};
+					//console.log("at.scene1.rotation");
+					//console.log(at.scene1.rotation);
+
+					var cosx = Math.cos(at.scene1.rotation.x);
+					var sinx = Math.sin(at.scene1.rotation.x);
+
+					var cosy = Math.cos(at.scene1.rotation.y);
+					var siny = Math.sin(at.scene1.rotation.y);
+
+					var cosz = Math.cos(at.scene1.rotation.z);
+					var sinz = Math.sin(at.scene1.rotation.z);
+
+					rotx(cosx, sinx, objx);
+					roty(cosy, siny, objx);
+					rotz(cosz, sinz, objx);
+
+					rotx(cosx, sinx, objy);
+					roty(cosy, siny, objy);
+					rotz(cosz, sinz, objy);
+
+					rotx(cosx, sinx, objz);
+					roty(cosy, siny, objz);
+					rotz(cosz, sinz, objz);
 
 					var mx = xx/5;
 					var my = -yy/5;
 
+					/*
 					console.log("mx");
 					console.log(mx);
 					console.log("my");
@@ -617,11 +640,7 @@ specular: 0xbcbcbc,
 					console.log(objx);
 					console.log("objy");
 					console.log(objy);
-
-
-
-
-
+					//*/
 
 					at.scene.position.x = at.lastsceneX - objx.x * mx;
 					at.scene.position.y = at.lastsceneY - objx.y * mx;
@@ -632,18 +651,61 @@ specular: 0xbcbcbc,
 					at.scene.position.z += objy.z * my;
 					//*/
 
-
-
-
-
 					at.renderer.render( at.scene2, at.camera );
 				}
 				else if(at.viewfunc == "rotxy")
 				{
 					var xx = at.startX - x;
 					var yy = at.startY - y;
+
+					/*
+					var objx = {x:1, y:0, z:0};
+					var objy = {x:0, y:1, z:0};
+					var objz = {x:0, y:0, z:1};
+					//console.log("at.scene1.rotation");
+					//console.log(at.scene1.rotation);
+
+					var cosx = Math.cos(at.scene1.rotation.x);
+					var sinx = Math.sin(at.scene1.rotation.x);
+
+					var cosy = Math.cos(at.scene1.rotation.y);
+					var siny = Math.sin(at.scene1.rotation.y);
+
+					var cosz = Math.cos(at.scene1.rotation.z);
+					var sinz = Math.sin(at.scene1.rotation.z);
+
+					rotx(cosx, sinx, objx);
+					roty(cosy, siny, objx);
+					rotz(cosz, sinz, objx);
+
+					rotx(cosx, sinx, objy);
+					roty(cosy, siny, objy);
+					rotz(cosz, sinz, objy);
+
+					rotx(cosx, sinx, objz);
+					roty(cosy, siny, objz);
+					rotz(cosz, sinz, objz);
+
+					var mx = (yy/50);
+					var my = (xx/50);
+
+
+					at.scene1.rotation.x = at.lastscene1RotX + objx.x * mx;
+					at.scene1.rotation.y = at.lastscene1RotY + objx.y * mx;
+					at.scene1.rotation.z = at.lastscene1RotZ + objx.z * mx;
+
+					at.scene1.rotation.x +=  objy.x * my;
+					at.scene1.rotation.y += objy.y * my;
+					at.scene1.rotation.z += objy.z * my;
+					//*/
+					
 					at.scene1.rotation.x = at.lastscene1RotX + (yy/50);
 					at.scene1.rotation.y = at.lastscene1RotY + (xx/50);
+					//*/
+
+
+
+
 					at.renderer.render( at.scene2, at.camera );
 				}
 			}
