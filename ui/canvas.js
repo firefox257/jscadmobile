@@ -698,9 +698,9 @@ specular: 0xbcbcbc,
 					at.scene1.rotation.y += objy.y * my;
 					at.scene1.rotation.z += objy.z * my;
 					//*/
-					
-					at.scene1.rotation.x = at.lastscene1RotX + (yy/50);
-					at.scene1.rotation.y = at.lastscene1RotY + (xx/50);
+
+					at.scene1.rotation.x = at.lastscene1RotX - (yy/50);
+					at.scene1.rotation.y = at.lastscene1RotY - (xx/50);
 					//*/
 
 
