@@ -304,8 +304,31 @@ te="onclick:onclick,onmousedown:onmousedown,onmouseup:onmouseup,onmousemove:onmo
 		return obj1;
 	}
 
+	function rotx(cosx, sinx, obj)
+	{
+		var y1 = obj.y * cosx - obj.z * sinx;
+		var z1 = obj.y * sinx + obj.z * cosx;
 
+		obj.y = y1;
+		obj.z = z1;
+	}
 
+	function roty(cosy, siny, obj)
+	{
+		var z1 = obj.z * cosy - obj.x * siny;
+		var x1 = obj.z * siny + obj.x * cosy;
+		obj.z =z1;
+		obj.x = x1;
+	}
+
+	function rotz(cosz, sinz, obj)
+	{
+		var x1 = obj.x * cosz - obj.y * sinz;
+		var y1 = obj.x * sinz + obj.y * cosz;
+
+		obj.x = x1;
+		obj.y = y1;
+	}
 
 
 function o()
@@ -397,8 +420,8 @@ function o()
 
 			var obj1 = cadToThree(cad);
 
-			obj1.rotation.x = 0.5;
-			obj1.rotation.y = 0.5;
+		//	obj1.rotation.x = 0.5;
+			//obj1.rotation.y = 0.5;
 
 			at.scene.add(obj1);
 
@@ -421,6 +444,8 @@ specular: 0xbcbcbc,
 			at.renderer.render( at.scene2, at.camera );
 		});
 	}
+
+
 
 	var at=
 	{
@@ -535,8 +560,82 @@ specular: 0xbcbcbc,
 				{
 					var xx = at.startX - x;
 					var yy = at.startY - y;
+
+					//recalculate based on scene1 rotation.
+
+
+					var objx = {x:1, y:0, z:0};
+					var objy = {x:0, y:1, z:0};
+					var objz = {x:0, y:0, z:1};
+					console.log("at.scene1.rotation");
+					console.log(at.scene1.rotation);
+
+					var cosx = Math.cos(at.scene1.rotation.x);
+					var sinx = Math.sin(at.scene1.rotation.x);
+
+					var cosy = Math.cos(at.scene1.rotation.y);
+					var siny = Math.sin(at.scene1.rotation.y);
+
+					var cosz = Math.cos(at.scene1.rotation.z);
+					var sinz = Math.sin(at.scene1.rotation.z);
+
+					rotx(cosx, sinx, objx);
+					roty(cosy, siny, objx);
+					rotz(cosz, sinz, objx);
+
+					rotx(cosx, sinx, objy);
+					roty(cosy, siny, objy);
+					rotz(cosz, sinz, objy);
+
+					rotx(cosx, sinx, objz);
+					roty(cosy, siny, objz);
+					rotz(cosz, sinz, objz);
+
+
+
+					//*/
+
+
+
+					/*
 					at.scene.position.x = at.lastsceneX - (xx/5);
 					at.scene.position.y = at.lastsceneY + (yy/5);
+
+					//*/
+
+
+					var mx = xx/5;
+					var my = -yy/5;
+
+					console.log("mx");
+					console.log(mx);
+					console.log("my");
+					console.log(my);
+
+
+					console.log("objx");
+					console.log(objx);
+					console.log("objy");
+					console.log(objy);
+
+
+
+
+
+
+					at.scene.position.x = at.lastsceneX - objx.x * mx;
+					at.scene.position.y = at.lastsceneY - objx.y * mx;
+					at.scene.position.z = at.lastsceneZ + objx.z * mx;
+
+					at.scene.position.x -=  objy.x * my;
+					at.scene.position.y -= objy.y * my;
+					at.scene.position.z += objy.z * my;
+					//*/
+
+
+
+
+
 					at.renderer.render( at.scene2, at.camera );
 				}
 				else if(at.viewfunc == "rotxy")
