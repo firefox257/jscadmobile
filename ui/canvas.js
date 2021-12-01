@@ -683,13 +683,14 @@ specular: 0xbcbcbc,
 					at.scene.position.y = at.lastsceneY + objx.y * mx;
 					at.scene.position.z = at.lastsceneZ + objx.z * mx;
 
-					at.scene.position.x +=  objy.x * my;
+					at.scene.position.x -=  objy.x * my;
 					at.scene.position.y += objy.y * my;
 					at.scene.position.z += objy.z * my;
 
-					/*at.scene.position.x += objz.x * my;
+					/*
+					at.scene.position.x += objz.x * my;
 					at.scene.position.y += objz.y * my;
-					at.scene.position.z += objz.z * my;*/
+					at.scene.position.z += objz.z * my;
 
 					//*/
 
