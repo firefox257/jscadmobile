@@ -4,6 +4,7 @@ var css = `
 	position: absolute;
 	top: 0; left: 0;
 	display:inline-block;
+	z-index:200;
 }
 .menu
 {
@@ -17,7 +18,6 @@ var html = `
 	<span class = "menuside">
 		<c tt = "button" te="onclick:onclick">&#8595;</c><br/>
 		<span class = "menu" t="show:style.display" tg = "menu">
-		menu stuff. <br/>
 		</span>
 
 	</span>

@@ -9,7 +9,8 @@ body
 
 var html = `
 <c tt ="canvas">
-	<c tt="menu" >d</c>
+	<c tt="menu" ></c>
+	<c tt ="editor"></c>
 </c>
 <c tt = "modals">
 </c>

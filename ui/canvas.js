@@ -121,18 +121,18 @@ te="onclick:onclick,onmousedown:onmousedown,onmouseup:onmouseup,onmousemove:onmo
 </canvas>
 <div class="fullCanvas">
 	<div class="innerCanvas" ti>
-	<span class = "navView">
-		<c tt = "radiobutton" group="nav" id="xy" value="xy" te="onselect:onselect">
-			X/Y
-		</c>
-		<c tt = "radiobutton" group="nav" id="zoom" value="zoom" te="onselect:onselect">
-			Zoom
-		</c>
-		<c tt = "radiobutton" group="nav" id="rotxy" value="rotxy" te="onselect:onselect">
-			Rot X/Y
-		</c>
-	</span>
+		<span class = "navView">
+			<c tt = "radiobutton" group="nav" id="xy" value="xy" te="onselect:onselect">
+				X/Y
+			</c>
+			<c tt = "radiobutton" group="nav" id="zoom" value="zoom" te="onselect:onselect">
+				Zoom
+			</c>
+			<c tt = "radiobutton" group="nav" id="rotxy" value="rotxy" te="onselect:onselect">
+				Rot X/Y
+			</c>
 
+		</span>
 	</div>
 </div>
 
@@ -189,9 +189,6 @@ te="onclick:onclick,onmousedown:onmousedown,onmouseup:onmouseup,onmousemove:onmo
 
 	function cadToThree(v1)
 	{
-
-		console.log("here123");
-		console.log(v1);
 		const gg = new THREE.BufferGeometry();
 		var pos = [];
 		var nor = [];
@@ -369,10 +366,11 @@ function o()
 
 		at.scene = new THREE.Scene();
 		at.scene1 = new THREE.Scene();
+		at.scene1.rotation.x = 3.1415926535/2;
 		at.scene2 = new THREE.Scene();
 
 
-		at.scene2.position.z = -140;
+		at.scene2.position.z = -50;
 		at.scene.background = new THREE.Color( 0xeeeeee );
 		at.scene1.background = new THREE.Color( 0xeeeeee );
 		at.scene2.background = new THREE.Color( 0xeeeeee );
@@ -401,6 +399,26 @@ function o()
 
 
 	const ambilight = new THREE.AmbientLight( 0x404040 ); // soft white light
+
+	const linerefmaterial = new THREE.LineBasicMaterial( { color: 0xff8855 } );
+
+	const linerefpointsx = [new THREE.Vector3( -600, 0, 0 ), new THREE.Vector3( 600, 0, 0 )];
+	const linerefpointsy = [new THREE.Vector3( 0, -600, 0 ), new THREE.Vector3( 0, 600, 0 )];
+	const linerefpointsz = [new THREE.Vector3( 0, 0, -600), new THREE.Vector3( 0, 0, 600)];
+
+	const linegeomx = new THREE.BufferGeometry().setFromPoints( linerefpointsx );
+	const linegeomy = new THREE.BufferGeometry().setFromPoints( linerefpointsy );
+	const linegeomz = new THREE.BufferGeometry().setFromPoints( linerefpointsz );
+	const linerefx = new THREE.Line( linegeomx, linerefmaterial );
+	const linerefy = new THREE.Line( linegeomy, linerefmaterial );
+	const linerefz = new THREE.Line( linegeomz, linerefmaterial );
+
+	const gridrefmaterial = new THREE.LineBasicMaterial( { color: 0x000000 } );
+	const gridrefcenterxmaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+	const gridrefcenterymaterial = new THREE.LineBasicMaterial( { color: 0x00ff00 } );
+
+
+
 	//scene.add( light );
 	function setupMsgc()
 	{
@@ -417,13 +435,39 @@ function o()
 			at.scene2.add(light2);
 			at.scene2.add(light3);
 			at.scene2.add(ambilight);
+			at.scene2.add(linerefx);
+			at.scene2.add(linerefy);
+			at.scene2.add(linerefz);
 
-			var obj1 = cadToThree(cad);
+			for(var i = -600; i <= 600; i += 10)
+			{
+				const pointsx = [new THREE.Vector3( -600, i, 0 ), new THREE.Vector3( 600, i, 0 )];
+				const pointsy = [new THREE.Vector3( i, -600, 0 ), new THREE.Vector3( i, 600, 0 )];
+				const geomx = new THREE.BufferGeometry().setFromPoints( pointsx );
+				const geomy = new THREE.BufferGeometry().setFromPoints( pointsy );
+				var gridrefx;
+				var gridrefy;
+				if(i == 0)
+				{
+					gridrefx = new THREE.Line( geomx, gridrefcenterxmaterial );
+					gridrefy = new THREE.Line( geomy, gridrefcenterymaterial );
+				}
+				else
+				{
+					gridrefx = new THREE.Line( geomx, gridrefmaterial );
+					gridrefy = new THREE.Line( geomy, gridrefmaterial );
+				}
+				at.scene.add(gridrefx);
+				at.scene.add(gridrefy);
+			}
 
-		//	obj1.rotation.x = 0.5;
-			//obj1.rotation.y = 0.5;
 
-			at.scene.add(obj1);
+
+			for(var i = 0; i < cad.length; i++)
+			{
+				var obj1 = cadToThree(cad[i]);
+				at.scene.add(obj1);
+			}
 
 /*
 			const geometry = new THREE.BoxGeometry( 20, 20, 20 );
@@ -576,18 +620,11 @@ specular: 0xbcbcbc,
 					rotx(cosx, sinx, objz);
 					roty(cosy, siny, objz);
 					rotz(cosz, sinz, objz);
-
-
 					var yy = at.startY - y;
 					//at.scene.position.z = at.lastsceneZ + yy;
-
-
 					at.scene.position.x = at.lastsceneX - objz.x * yy;
-					at.scene.position.y = at.lastsceneY - objz.y * yy;
-					at.scene.position.z = at.lastsceneZ + objz.z * yy;
-
-
-
+					at.scene.position.y = at.lastsceneY + objz.y * yy;
+					at.scene.position.z = at.lastsceneZ - objz.z * yy;
 
 					at.renderer.render( at.scene2, at.camera );
 				}
@@ -643,12 +680,17 @@ specular: 0xbcbcbc,
 					//*/
 
 					at.scene.position.x = at.lastsceneX - objx.x * mx;
-					at.scene.position.y = at.lastsceneY - objx.y * mx;
+					at.scene.position.y = at.lastsceneY + objx.y * mx;
 					at.scene.position.z = at.lastsceneZ + objx.z * mx;
 
-					at.scene.position.x -=  objy.x * my;
-					at.scene.position.y -= objy.y * my;
+					at.scene.position.x +=  objy.x * my;
+					at.scene.position.y += objy.y * my;
 					at.scene.position.z += objy.z * my;
+
+					/*at.scene.position.x += objz.x * my;
+					at.scene.position.y += objz.y * my;
+					at.scene.position.z += objz.z * my;*/
+
 					//*/
 
 					at.renderer.render( at.scene2, at.camera );
@@ -699,8 +741,8 @@ specular: 0xbcbcbc,
 					at.scene1.rotation.z += objy.z * my;
 					//*/
 
-					at.scene1.rotation.x = at.lastscene1RotX - (yy/50);
-					at.scene1.rotation.y = at.lastscene1RotY - (xx/50);
+					at.scene1.rotation.x = at.lastscene1RotX - (yy/100);
+					at.scene1.rotation.z = at.lastscene1RotZ - (xx/100);
 					//*/
 
 
@@ -740,7 +782,7 @@ specular: 0xbcbcbc,
 		createDownload(e)
 		{
 			at.modal.show = 1;
-			var stl = at.mainobj.toStlBinary();
+			var stl = union(at.mainobj).toStlBinary();
 			var blobUrl = URL.createObjectURL(stl);
 			$.attr(at.link, "href", blobUrl);
 			at.link.download = "obj.stl";
