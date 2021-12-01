@@ -366,7 +366,7 @@ function o()
 
 		at.scene = new THREE.Scene();
 		at.scene1 = new THREE.Scene();
-		at.scene1.rotation.x = 3.1415926535/2;
+		at.scene1.rotation.x = 3.14159265358/2;
 		at.scene2 = new THREE.Scene();
 
 
@@ -630,17 +630,12 @@ specular: 0xbcbcbc,
 				}
 				else if(at.viewfunc == "xy")
 				{
-					var xx = at.startX - x;
-					var yy = at.startY - y;
-
-					//recalculate based on scene1 rotation.
+					var xx = (at.startX - x)/5;
+					var yy = (at.startY - y)/5;
 
 
-					var objx = {x:1, y:0, z:0};
-					var objy = {x:0, y:1, z:0};
-					var objz = {x:0, y:0, z:1};
-					//console.log("at.scene1.rotation");
-					//console.log(at.scene1.rotation);
+
+					var objxy = {x: xx,y: yy, z: 0};
 
 					var cosx = Math.cos(at.scene1.rotation.x);
 					var sinx = Math.sin(at.scene1.rotation.x);
@@ -651,62 +646,24 @@ specular: 0xbcbcbc,
 					var cosz = Math.cos(at.scene1.rotation.z);
 					var sinz = Math.sin(at.scene1.rotation.z);
 
-					rotx(cosx, sinx, objx);
-					roty(cosy, siny, objx);
-					rotz(cosz, sinz, objx);
+					rotx(cosx, sinx, objxy);
+					roty(cosy, siny, objxy);
+					rotz(cosz, sinz, objxy);
 
-					rotx(cosx, sinx, objy);
-					roty(cosy, siny, objy);
-					rotz(cosz, sinz, objy);
+					at.scene.position.x = at.lastsceneX - objxy.x;
+					at.scene.position.y = at.lastsceneY + objxy.y;
+					at.scene.position.z = at.lastsceneZ - objxy.z;
 
-					rotx(cosx, sinx, objz);
-					roty(cosy, siny, objz);
-					rotz(cosz, sinz, objz);
-
-					var mx = xx/5;
-					var my = -yy/5;
-
-					/*
-					console.log("mx");
-					console.log(mx);
-					console.log("my");
-					console.log(my);
-
-
-					console.log("objx");
-					console.log(objx);
-					console.log("objy");
-					console.log(objy);
-					//*/
-
-					at.scene.position.x = at.lastsceneX - objx.x * mx;
-					at.scene.position.y = at.lastsceneY + objx.y * mx;
-					at.scene.position.z = at.lastsceneZ + objx.z * mx;
-
-					at.scene.position.x -=  objy.x * my;
-					at.scene.position.y += objy.y * my;
-					at.scene.position.z += objy.z * my;
-
-					/*
-					at.scene.position.x += objz.x * my;
-					at.scene.position.y += objz.y * my;
-					at.scene.position.z += objz.z * my;
-
-					//*/
 
 					at.renderer.render( at.scene2, at.camera );
 				}
 				else if(at.viewfunc == "rotxy")
 				{
-					var xx = at.startX - x;
-					var yy = at.startY - y;
+					var xx = (at.startX - x)/100;
+					var yy = (at.startY - y)/100;
 
 					/*
-					var objx = {x:1, y:0, z:0};
-					var objy = {x:0, y:1, z:0};
-					var objz = {x:0, y:0, z:1};
-					//console.log("at.scene1.rotation");
-					//console.log(at.scene1.rotation);
+					var objr = {x: xx,y: yy, z: 0};
 
 					var cosx = Math.cos(at.scene1.rotation.x);
 					var sinx = Math.sin(at.scene1.rotation.x);
@@ -717,33 +674,16 @@ specular: 0xbcbcbc,
 					var cosz = Math.cos(at.scene1.rotation.z);
 					var sinz = Math.sin(at.scene1.rotation.z);
 
-					rotx(cosx, sinx, objx);
-					roty(cosy, siny, objx);
-					rotz(cosz, sinz, objx);
-
-					rotx(cosx, sinx, objy);
-					roty(cosy, siny, objy);
-					rotz(cosz, sinz, objy);
-
-					rotx(cosx, sinx, objz);
-					roty(cosy, siny, objz);
-					rotz(cosz, sinz, objz);
-
-					var mx = (yy/50);
-					var my = (xx/50);
+					rotx(cosx, sinx, objr);
+					roty(cosy, siny, objr);
+					rotz(cosz, sinz, objr);
+					//*
 
 
-					at.scene1.rotation.x = at.lastscene1RotX + objx.x * mx;
-					at.scene1.rotation.y = at.lastscene1RotY + objx.y * mx;
-					at.scene1.rotation.z = at.lastscene1RotZ + objx.z * mx;
+					at.scene1.rotation.x = at.lastscene1RotX - yy;
+					at.scene1.rotation.z = at.lastscene1RotZ - xx;
 
-					at.scene1.rotation.x +=  objy.x * my;
-					at.scene1.rotation.y += objy.y * my;
-					at.scene1.rotation.z += objy.z * my;
-					//*/
 
-					at.scene1.rotation.x = at.lastscene1RotX - (yy/100);
-					at.scene1.rotation.z = at.lastscene1RotZ - (xx/100);
 					//*/
 
 

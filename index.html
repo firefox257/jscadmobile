@@ -79,7 +79,7 @@ scroll="no">
 
 		function rotcy(rot, r, h) {
 			return rotate(90, rot,
-				color([1.0, 0, 0], cylinder({r: r, h: h, center: true, fn: 50}) )      );
+				color([1.0, 0, 0], cylinder({r: r, h: h, center: true, fn: 40}) )      );
 		}
 
 		function example001() {
@@ -87,17 +87,22 @@ scroll="no">
 			var hole = 25;
 			var cy_r = r_from_dia(hole);
 			var cy_h = r_from_dia(size * 2.5);
+			//sphere({r: 10, fn: 100, type: 'geodesic'})
+			return difference(sphere({r: r_from_dia(size), fn: 80, type: 'geodesic'}),
+			rotcy([0, 0, 0], cy_r, cy_h),
+			rotcy([1, 0, 0], cy_r, cy_h),
+			rotcy([0, 1, 0], cy_r, cy_h)
 
-			return difference(
-				color([0.1, 1.0, 1.0],	sphere({r: r_from_dia(size), fn:50})),
+			);/*difference(
+				color([0.1, 1.0, 1.0],	sphere({r: r_from_dia(size), fn:80,  type: 'geodesic '})),
 				rotcy([0, 0, 0], cy_r, cy_h),
 				rotcy([1, 0, 0], cy_r, cy_h),
 				rotcy([0, 1, 0], cy_r, cy_h)
-			);
+			);*/
 		}
 
 
-			var v3 = translate([50, 0, 0], sphere({r: 5, fn: 50}) );
+			var v3 = translate([50, 0, 0], sphere({r: 5, fn: 80, type: 'geodesic'}) );
 
 
 			var v1 = color([1.0,1.0,1.0, 1.0], example001());
