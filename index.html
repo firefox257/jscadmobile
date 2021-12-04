@@ -57,6 +57,7 @@ scroll="no">
 
 	</script>
 	<script type="module" src = "./tieabv.js"></script>
+
 	<!--comps-->
 
 	<script type="module" src = "./ui/button.js"></script>
@@ -68,13 +69,16 @@ scroll="no">
 	<script type="module" src = "./ui/canvas.js"></script>
 	<!--pages-->
 	<script type="module" src = "./pages/landing.js"></script>
+	<!--utils-->
+	<script type="module" src = "./utils/cache.js"></script>
+
 
 
 	<script type="module">
 		$.doc();
 
 
-
+var code = `
 		function r_from_dia(d) { return d / 2; }
 
 		function rotcy(rot, r, h) {
@@ -102,11 +106,12 @@ scroll="no">
 		}
 
 
-			var v3 = translate([50, 0, 0], sphere({r: 5, fn: 80, type: 'geodesic'}) );
+			var v3 = translate([50, 0, 30], sphere({r: 5, fn: 80, type: 'geodesic'}) );
 
 
 			var v1 = color([1.0,1.0,1.0, 1.0], example001());
 			var v2 = [v1, v3];
+
 			//var v1 = example001();
 
 			/*
@@ -121,8 +126,12 @@ scroll="no">
 			*/
 
 			$.msgc.send("set cad obj", v2);
+`;
 
+var init = []
+$.msgc.send("set cad obj", init);
 
 	</script>
+
 </body>
 </html>

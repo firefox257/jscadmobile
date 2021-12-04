@@ -365,8 +365,12 @@ function o()
 		at.renderer.setSize( size.w, size.h );
 
 		at.scene = new THREE.Scene();
+		at.scene.position.y = 200;
+		at.scene.position.z = -100;
 		at.scene1 = new THREE.Scene();
-		//at.scene1.rotation.x = 3.14159265358/2;
+		at.scene1.rotation.x = 3.14159265358/2 + 0.5;
+		at.scene1.rotation.y = 3.14159265358;
+		at.scene1.rotation.z = 3.14159265358;
 		at.scene2 = new THREE.Scene();
 
 
