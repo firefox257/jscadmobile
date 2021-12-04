@@ -128,8 +128,75 @@ var code = `
 			$.msgc.send("set cad obj", v2);
 `;
 
-var init = []
-$.msgc.send("set cad obj", init);
+	var init = []
+	$.msgc.send("set cad obj", init);
+
+	var trycode = `
+
+	var v1 = difference(
+		sphere({r: 30, fn: 80, type: 'geodesic'}),
+		cylinder({r: 10, h: 100, center: true, fn: 40})
+	);
+	v1 = color([0, 1.0, 1.0], v1);
+		final = [v1];
+	`;
+
+	var try1code = `
+
+	function r_from_dia(d) { return d / 2; }
+
+	function rotcy(rot, r, h) {
+		return rotate(90, rot,
+			color([1.0, 0, 0], cylinder({r: r, h: h, center: true, fn: 40}) )      );
+	}
+
+	function example001() {
+		var size = 50;
+		var hole = 25;
+		var cy_r = r_from_dia(hole);
+		var cy_h = r_from_dia(size * 2.5);
+		//sphere({r: 10, fn: 100, type: 'geodesic'})
+		return difference(sphere({r: r_from_dia(size), fn: 80, type: 'geodesic'}),
+		rotcy([0, 0, 0], cy_r, cy_h),
+		rotcy([1, 0, 0], cy_r, cy_h),
+		rotcy([0, 1, 0], cy_r, cy_h)
+
+		);/*difference(
+			color([0.1, 1.0, 1.0],	sphere({r: r_from_dia(size), fn:80,  type: 'geodesic '})),
+			rotcy([0, 0, 0], cy_r, cy_h),
+			rotcy([1, 0, 0], cy_r, cy_h),
+			rotcy([0, 1, 0], cy_r, cy_h)
+		);*/
+	}
+
+function main()
+{
+		var v3 = translate([50, 0, 30], sphere({r: 5, fn: 80, type: 'geodesic'}) );
+
+
+		var v1 = color([1.0,1.0,1.0, 1.0], example001());
+		var v2 = [v1, v3];
+
+
+
+
+		return v2;
+	}
+
+	`;
+
+	var vv = $.cache("proj1", "try1", try1code);
+	console.log("vv");
+	console.log(vv);
+	var vvv = vv.make();
+	console.log("vvv");
+	console.log(vvv);
+
+	$.msgc.send("set cad obj", vvv);
+
+	var b1 = [sphere({r: 30, fn: 80, type: 'geodesic'})];
+	//$.msgc.send("set cad obj", b1);
+
 
 	</script>
 
