@@ -366,16 +366,15 @@ function o()
 
 		at.scene = new THREE.Scene();
 		at.scene1 = new THREE.Scene();
-		at.scene1.rotation.x = 3.14159265358/2;
+		//at.scene1.rotation.x = 3.14159265358/2;
 		at.scene2 = new THREE.Scene();
 
 
-		at.scene2.position.z = -50;
+		//at.scene2.position.z = -50;
 		at.scene.background = new THREE.Color( 0xeeeeee );
 		at.scene1.background = new THREE.Color( 0xeeeeee );
 		at.scene2.background = new THREE.Color( 0xeeeeee );
-		//at.camera.position.y = -1;
-		//at.camera.position.z = 140;
+
 
 
 	}
@@ -686,7 +685,8 @@ specular: 0xbcbcbc,
 
 					//*/
 
-
+					at.scene.rotation.x = at.lastsceneRotX  - yy;
+					at.scene.rotation.z = at.lastsceneRotZ - xx;
 
 
 					at.renderer.render( at.scene2, at.camera );
