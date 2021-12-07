@@ -171,19 +171,28 @@ var code = `
 
 function main()
 {
-		var v3 = translate([50, 0, 30], sphere({r: 5, fn: 80, type: 'geodesic'}) );
-
-
-		var v1 = color([1.0,1.0,1.0, 1.0], example001());
-		var v2 = [v1, v3];
-
-
-
-
-		return v2;
-	}
+	var v3 = translate([50, 0, 30], sphere({r: 5, fn: 80, type: 'geodesic'}) );
+	var v1 = color([1.0,1.0,1.0, 1.0], example001());
+	var v2 = [v1, v3];
+	return v2;
+}
 
 	`;
+
+	/*
+
+function main()
+{
+	var c1 = cube({size: [30, 30, 30], center: true});
+	var s1 = sphere({r: 21.1, fn:150, center: true});
+	var v2 = intersection(c1, s1);
+	var cy1 = cylinder({r: 10, center: true, fn: 80, h: 80});
+	return [difference(v2, cy1)];
+}
+
+
+
+	*/
 
 	var vv = $.cache("proj1", "try1", try1code);
 	console.log("vv");

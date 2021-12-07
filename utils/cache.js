@@ -1,11 +1,34 @@
 var origin =
 {
+	cube: cube,
 	sphere: sphere,
 	cylinder: cylinder,
+	torus:torus,
+	polyhedron:polyhedron,
+	vector_text: vector_text,
+	scale: scale,
 	rotate: rotate,
+	translate: translate,
+	center: center,
+	mirror: mirror,
+	union: union,
+	intersection: intersection,
+
 	difference: difference,
 	color:color,
-	translate: translate
+	translate: translate,
+	circle: circle,
+	square: square,
+	polygon: polygon,
+	hull: hull,
+	chain_hull: chain_hull,
+	linear_extrude: linear_extrude,
+	rectangular_extrude: rectangular_extrude,
+	rotate_extrude: rotate_extrude,
+	color: color
+
+
+
 };
 $.cache = function(project, comp, code)
 {
@@ -129,40 +152,43 @@ $.cache = function(project, comp, code)
 	var final;
 	eval(code + "final = main();");
 
-	final.make = function(o)
+	var codecount= 0;
+	final.cmake = function(o)
 	{
-		if(o == undefined)
-		{
-			var oo = [];
-			for(var i = 0; i < this.length; i++)
-			{
-				oo.push(this.make(this[i]));
-			}
-			return oo;
-		}
-		else
-		{
+
 			if(o["__func"]!= undefined)
 			{
 				var oo = [];
 				for(var i = 0; i < o.__args.length; i++)
 				{
-					oo.push(this.make(o.__args[i]));
+					oo.push(this.cmake(o.__args[i]));
 				}
-				var ff = origin[o.__func];
-				/*console.log("ff:" + o.__func);
-				console.log(ff);
+				//var ff = origin[o.__func];
+				/*
+				console.log("ff:" + o.__func);
+				console.log(ff);/
 				console.log("args oo");
-				console.log(oo);*/
+				console.log(oo);//*/
 				return origin[o.__func].apply(null,oo);
 			}
 			else
 			{
 				return o;
 			}
+
+
+
+	}
+
+	final.make = function(code)
+	{
+		codecount = 0;
+		var oo = [];
+		for(var i = 0; i < this.length; i++)
+		{
+			oo.push(this.cmake(this[i]));
 		}
-
-
+		return oo;
 	}
 
 	return final;

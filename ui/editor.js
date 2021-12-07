@@ -27,13 +27,14 @@ var css = `
 
 var html = `
 <span class = "righteditorbutton" >
-	<c tt = "button" te = "ontoggleheight:onclick">height</c>
+	<c tt = "button" te = "oncompile:onclick">C</c>
+	<c tt = "button" te = "ontoggleheight:onclick">&#8597;</c>
 	<c tt = "button" te="onshowhide:onclick">&#8595;</c>
 </span>
 <span class = "editorbox" t="showcode:style.display">
 <c tt = "radiobutton" group = "compview" id="full" value="full" selected =1>Full</c>
 <c tt = "radiobutton" group = "compview" id="comp" value="comp">Comp</c>
-	<textarea id="editor" te="onkeydown:onkeydown" t="heightcode:style.height" >
+	<textarea id="editor" td = "codetext" te="onkeydown:onkeydown" t="heightcode:style.height" >
 	</textarea>
 </span>
 `;
@@ -45,6 +46,7 @@ function o()
 	{
 		showcode: "none",
 		heightcode: "42%",
+		codetext: "",
 		onshowhide(e)
 		{
 			if(at.showcode == "none")
@@ -67,10 +69,17 @@ function o()
 				at.heightcode = "42%";
 			}
 		},
+		oncompile(e)
+		{
+			//console.log(at.codetext.value);
+			var vv = $.cache("proj1", "try1", at.codetext.value);
+			var vvv = vv.make();
+			$.msgc.send("set cad obj", vvv);
+		},
 		onkeydown(e)
 		{
 
-			if (e.keyCode == 9 || e.keyCode == 32)
+			if (e.keyCode == 9)
 			{
 		    e.preventDefault();
 				document.execCommand('insertText',false,"\t");
