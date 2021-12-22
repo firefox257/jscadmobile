@@ -159,17 +159,28 @@ $.cache = function(project, comp, code)
 			if(o["__func"]!= undefined)
 			{
 				var oo = [];
-				for(var i = 0; i < o.__args.length; i++)
+				var diffcache = false;
+
+				if(o.__cache == undefined || o.__func !== o.__funcback)
 				{
-					oo.push(this.cmake(o.__args[i]));
+					diffcache = true;
+					o.__argsback = o.__args;
+					o.__funcback = o.__func;
 				}
-				//var ff = origin[o.__func];
-				/*
-				console.log("ff:" + o.__func);
-				console.log(ff);/
-				console.log("args oo");
-				console.log(oo);//*/
-				return origin[o.__func].apply(null,oo);
+
+				if(diffcache)
+				{
+					for(var i = 0; i < o.__args.length; i++)
+					{
+						oo.push(this.cmake(o.__args[i]));
+					}
+
+
+					o.__cache = origin[o.__func].apply(null,oo);
+				}
+
+
+				return o.__cache;
 			}
 			else
 			{
@@ -188,6 +199,9 @@ $.cache = function(project, comp, code)
 		{
 			oo.push(this.cmake(this[i]));
 		}
+
+		console.log("Here1");
+		console.log(oo);
 		return oo;
 	}
 

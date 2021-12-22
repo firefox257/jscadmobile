@@ -140,7 +140,7 @@ var code = `
 	v1 = color([0, 1.0, 1.0], v1);
 		final = [v1];
 	`;
-
+/*
 	var try1code = `
 
 	function r_from_dia(d) { return d / 2; }
@@ -161,14 +161,22 @@ var code = `
 		rotcy([1, 0, 0], cy_r, cy_h),
 		rotcy([0, 1, 0], cy_r, cy_h)
 
-		);/*difference(
-			color([0.1, 1.0, 1.0],	sphere({r: r_from_dia(size), fn:80,  type: 'geodesic '})),
-			rotcy([0, 0, 0], cy_r, cy_h),
-			rotcy([1, 0, 0], cy_r, cy_h),
-			rotcy([0, 1, 0], cy_r, cy_h)
-		);*/
+		);
 	}
+	//*/
+	var try1code = `
 
+	function main()
+	{
+		var c1 = cube({size: [30, 30, 30], center: true});
+		var s1 = sphere({r: 21.1, fn:150, center: true});
+		var v2 = intersection(c1, s1);
+		var cy1 = cylinder({r: 10, center: true, fn: 80, h: 80});
+		return [difference(v2, cy1)];
+	}
+	`;
+
+/*
 function main()
 {
 	var v3 = translate([50, 0, 30], sphere({r: 5, fn: 80, type: 'geodesic'}) );
@@ -178,6 +186,7 @@ function main()
 }
 
 	`;
+	//*/
 
 	/*
 
