@@ -1207,10 +1207,13 @@ globalThis.$ = $;
 			console.trace();
 		}
 		objscaf.obj = objscaf.objfunc();
+		
 		if(!objscaf.obj.attr) objscaf.obj.attr={};
 		//objscaf.dom.parentobj = objscaf.obj;
-		objscaf.obj.parentdom = objscaf.dom;
-
+		//objscaf.obj.parentdom = objscaf.dom;
+		
+		
+		
 		objscaf.obj.___donotremove = true;
 
 		if(!objscaf.obj.backerfields)objscaf.obj.backerfields = {};
@@ -1274,15 +1277,20 @@ globalThis.$ = $;
 
 
         dom.replaceWith(atdom);*/
-
+		
+		objscaf.obj.parentdom=[];
+		
         while(objscaf.tempdom.childNodes.length >0)
 		{
 			var v1 = objscaf.tempdom.childNodes[0];
 			//dom.appendChild(v1);
             v1.parentobj = objscaf.obj;
+			objscaf.obj.parentdom.push(v1);
+			
             dom.parentNode.insertBefore(v1, dom);
 		}
 		dom.remove();
+		objscaf.obj.attr.__parentdom=objscaf.obj.parentdom;
 
 	}
 
@@ -1358,11 +1366,19 @@ globalThis.$ = $;
 	$.append = $append;
 
 	//export
-	function $removecomp(o)
+	function $removeComp(o)
 	{
-		o.parentdom.remove();
+		//o.parentdom.remove();
+		var parent=o.parentdom;
+		
+		if(!parent)parent=o.__parentdom;
+		
+		for(var i in parent )
+		{
+			parent[i].remove();
+		}
 	}
-	$.removecomp = $removecomp;
+	$.removeComp = $removeComp;
 
 	//export
 	function $appendCss(strcss)
